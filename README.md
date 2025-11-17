@@ -40,7 +40,7 @@ aplicação/
 
 ## 🖼️ Arquitetura
 
-![Arquitetura Cloud Feedback](docs/Arquitetura_Cloud_Feedback.png)
+![Arquitetura Cloud Feedback](/aplicação/docs/Arquitetura_Cloud_Feedback.png)
 
 ---
 
@@ -86,9 +86,7 @@ aplicação/
 ## 📄 docs
 
 - **docs/Arquitetura_Cloud_Feedback.png**  
-  Diagrama da arquitetura do sistema.
-
-    ![Arquitetura Cloud Feedback](/aplicação/docs/Arquitetura_Cloud_Feedback.png)
+  Imagem salva do Diagrama da arquitetura do sistema.
 
 ## ⚙️ .gitignore
 
