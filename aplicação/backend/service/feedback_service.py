@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 import boto3
 import logging
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -11,7 +12,8 @@ class FeedbackService:
         self.dynamodb = boto3.resource('dynamodb')
         self.table = self.dynamodb.Table('Feedbacks')
         self.sns = boto3.client('sns')
-        self.sns_topic_arn = 'arn:aws:sns:sa-east-1:120726684266:feedback-topic'
+        # Busca o ARN do SNS de uma variável de ambiente
+        self.sns_topic_arn = os.environ.get('SNS_TOPIC_ARN')
 
     def process_feedback(self, feedback):
         try:

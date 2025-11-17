@@ -1,21 +1,6 @@
-# Maven build
-target/
-*.class
-*.jar
-
 # IDE configs
 .idea/
 .vscode/
 
-# Logs
-*.log
-
-# Sistema operacional
-.DS_Store
-Thumbs.db
-
 # Variáveis de ambiente / credenciais
-.env
-*.pem
-*.key
-*.crt
+backend/.env
