@@ -126,9 +126,9 @@ aplicação/
 
 ---
 
-## 📚 Créditos
+## 👨‍💻 Autor
 
-Desenvolvido por Geovane Ribeiro.
+**Geovane Ribeiro.**
 
 ---
 
