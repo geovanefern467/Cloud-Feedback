@@ -2,13 +2,11 @@ import json
 import re
 import logging
 from datetime import datetime
-from service.feedback_service import FeedbackService
-from model.feedback import Feedback
-
+from mock_lambda.service.feedback_service_mock import FeedbackServiceMock
+from backend.model.feedback import Feedback
 
 logger = logging.getLogger(__name__)
 
-# FLUXO PRINCIPAL
 def lambda_handler(event, context):
     try:
         data = parse_body(event)
@@ -19,7 +17,7 @@ def lambda_handler(event, context):
 
         feedback = build_feedback(data)
         process_feedback(feedback)
-    
+
         logger.info(f"Feedback recebido com sucesso para: {feedback.nome}")
         return success_response(feedback.nome)
 
@@ -28,22 +26,13 @@ def lambda_handler(event, context):
         logger.error(f"Erro inesperado ao processar feedback: {error_message}", exc_info=True)
         return error_response(f"Erro ao processar feedback: {error_message}", 500)
 
-
-
-
-# FUNÇÕES DA REGRA DE NEGÓCIO
 def parse_body(event):
-    """Converte o body da requisição em dicionário."""
     body = event.get("body")
-
     if isinstance(body, str):
         return json.loads(body)
-
     return body or {}
 
-
 def validate_fields(data):
-    """Valida os campos obrigatórios do feedback. Retorna mensagem de erro ou None."""
     nome = sanitize_text(data.get("nome", ""), 100)
     email = sanitize_text(data.get("email", ""), 100)
     mensagem = sanitize_text(data.get("mensagem", ""), 1000)
@@ -56,9 +45,7 @@ def validate_fields(data):
         return "E-mail inválido."
     return None
 
-
 def build_feedback(data):
-    """Cria objeto Feedback sanitizado e pronto para uso."""
     return Feedback.from_dict({
         "nome": sanitize_text(data.get("nome", ""), 100),
         "email": sanitize_text(data.get("email", ""), 100),
@@ -66,22 +53,16 @@ def build_feedback(data):
         "dataEnvio": datetime.utcnow().isoformat()
     })
 
-
 def process_feedback(feedback):
-    """Chama o serviço responsável por processar o feedback."""
-    service = FeedbackService()
+    service = FeedbackServiceMock()
     service.process_feedback(feedback)
 
-
-
-# FUNÇÕES DE RESPOSTA
 def success_response(nome):
     return {
         "statusCode": 200,
         "headers": default_headers(),
-        "body": json.dumps({"message": f"Feedback recebido de: {nome}"})
+        "body": json.dumps({"message": f"Feedback recebido para: {nome}"})
     }
-
 
 def error_response(message, status_code=400):
     return {
@@ -90,10 +71,6 @@ def error_response(message, status_code=400):
         "body": json.dumps({"error": message})
     }
 
-
-
-
-# FUNÇÕES AUXILIARES
 def default_headers():
     return {
         "Content-Type": "application/json",
@@ -102,12 +79,10 @@ def default_headers():
         "Access-Control-Allow-Methods": "POST,OPTIONS"
     }
 
-
-def is_valid_email(email: str) -> bool:
+def is_valid_email(email):
     return bool(re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email))
 
-
-def sanitize_text(text: str, max_length: int) -> str:
+def sanitize_text(text, max_length=100):
     if not isinstance(text, str):
         return ""
     cleaned = re.sub(r"[<>]", "", text.strip())

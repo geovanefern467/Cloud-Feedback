@@ -1,10 +1,12 @@
-# Usa a imagem base da AWS Lambda para Java 17
-FROM public.ecr.aws/lambda/java:17
+# Usa a imagem base da AWS Lambda para Python 3.11
+FROM public.ecr.aws/lambda/python:3.11
 
-# Copia o fat JAR gerado pelo Maven para o diretório de trabalho da Lambda
-COPY backend/target/feedback-lambda-1.0-SNAPSHOT-all.jar ${LAMBDA_TASK_ROOT}/app.jar
+# Instala dependências
+COPY backend/requirements.txt ./
+RUN pip install -r requirements.txt
 
-# Define o handler correto
-# O formato é "package.ClassName::methodName"
-# No seu caso, a classe é FeedbackHandler e o método é handleRequest
-CMD ["com.cloudfeedback.handler.FeedbackHandler::handleRequest"]
+# Copia o código da Lambda para o diretório de trabalho padrão
+COPY backend ./
+
+# Define o handler (ajuste o caminho conforme seu arquivo principal)
+CMD ["mock_lambda.handler.feedback_handler_mock.lambda_handler"]
