@@ -12,7 +12,6 @@ class FeedbackService:
         self.dynamodb = boto3.resource('dynamodb')
         self.table = self.dynamodb.Table('Feedbacks')
         self.sns = boto3.client('sns')
-        # Busca o ARN do SNS de uma variável de ambiente
         self.sns_topic_arn = os.environ.get('SNS_TOPIC_ARN')
 
     def process_feedback(self, feedback):
